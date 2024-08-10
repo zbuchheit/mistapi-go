@@ -12,15 +12,16 @@ type Admin struct {
     AdminId              *uuid.UUID                 `json:"admin_id,omitempty"`
     // trade compliance status. enum: `blocked`, `restricted`
     ComplianceStatus     *AdminComplianceStatusEnum `json:"compliance_status,omitempty"`
-    Email                string                     `json:"email"`
+    Email                *string                    `json:"email"`
     EnableTwoFactor      *bool                      `json:"enable_two_factor,omitempty"`
     ExpireTime           *int                       `json:"expire_time,omitempty"`
     // for an invite, this is the original first name used
-    FirstName            string                     `json:"first_name"`
+    FirstName            *string                    `json:"first_name"`
     // how long the invite should be valid
     Hours                *int                       `json:"hours,omitempty"`
     // for an invite, this is the original last name used
-    LastName             string                     `json:"last_name"`
+    LastName             *string                    `json:"last_name"`
+    Name                 *string                    `json:"name"`
     OauthGoogle          *bool                      `json:"oauth_google,omitempty"`
     // phone number (numbers only, including country code)
     Phone                *string                    `json:"phone,omitempty"`
@@ -55,18 +56,27 @@ func (a Admin) toMap() map[string]any {
     if a.ComplianceStatus != nil {
         structMap["compliance_status"] = a.ComplianceStatus
     }
-    structMap["email"] = a.Email
+    if a.Email != nil {
+        structMap["email"] = a.Email
+    }
     if a.EnableTwoFactor != nil {
         structMap["enable_two_factor"] = a.EnableTwoFactor
     }
     if a.ExpireTime != nil {
         structMap["expire_time"] = a.ExpireTime
     }
-    structMap["first_name"] = a.FirstName
+    if a.FirstName != nil {
+        structMap["first_name"] = a.FirstName
+    }
     if a.Hours != nil {
         structMap["hours"] = a.Hours
     }
-    structMap["last_name"] = a.LastName
+    if a.LastName != nil {
+        structMap["last_name"] = a.LastName
+    }
+    if a.Name != nil {
+        structMap["name"] = a.Name
+    }
     if a.OauthGoogle != nil {
         structMap["oauth_google"] = a.OauthGoogle
     }
@@ -106,7 +116,7 @@ func (a *Admin) UnmarshalJSON(input []byte) error {
     if err != nil {
     	return err
     }
-    additionalProperties, err := UnmarshalAdditionalProperties(input, "admin_id", "compliance_status", "email", "enable_two_factor", "expire_time", "first_name", "hours", "last_name", "oauth_google", "phone", "phone2", "privileges", "session_expiry", "tags", "two_factor_verified", "via_sso")
+    additionalProperties, err := UnmarshalAdditionalProperties(input, "admin_id", "compliance_status", "email", "enable_two_factor", "expire_time", "first_name", "hours", "last_name","name", "oauth_google", "phone", "phone2", "privileges", "session_expiry", "tags", "two_factor_verified", "via_sso")
     if err != nil {
     	return err
     }
@@ -114,12 +124,13 @@ func (a *Admin) UnmarshalJSON(input []byte) error {
     a.AdditionalProperties = additionalProperties
     a.AdminId = temp.AdminId
     a.ComplianceStatus = temp.ComplianceStatus
-    a.Email = *temp.Email
+    a.Email = temp.Email
     a.EnableTwoFactor = temp.EnableTwoFactor
     a.ExpireTime = temp.ExpireTime
-    a.FirstName = *temp.FirstName
+    a.FirstName = temp.FirstName
     a.Hours = temp.Hours
-    a.LastName = *temp.LastName
+    a.LastName = temp.LastName
+	a.Name = temp.Name
     a.OauthGoogle = temp.OauthGoogle
     a.Phone = temp.Phone
     a.Phone2 = temp.Phone2
@@ -141,6 +152,7 @@ type admin  struct {
     FirstName         *string                    `json:"first_name"`
     Hours             *int                       `json:"hours,omitempty"`
     LastName          *string                    `json:"last_name"`
+    Name			  *string                    `json:"name"`
     OauthGoogle       *bool                      `json:"oauth_google,omitempty"`
     Phone             *string                    `json:"phone,omitempty"`
     Phone2            *string                    `json:"phone2,omitempty"`
@@ -153,6 +165,9 @@ type admin  struct {
 
 func (a *admin) validate() error {
     var errs []string
+    if a.Name != nil {
+        return nil
+    }
     if a.Email == nil {
         errs = append(errs, "required field `email` is missing for type `Admin`")
     }
